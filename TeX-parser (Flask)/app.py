@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request
 import re
 import os
-import webbrowser
-import threading
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -102,17 +100,6 @@ def upload_file():
         return render_template('index.html', error=f'Ошибка при обработке файла: {str(e)}', result=None)
 
 
-# автоматич. открытие браузера:
-def open_browser():
-    """Открывает браузер после запуска сервера"""
-    # проверяем, что это основной процесс, а не перезагрузчик
-    if not os.environ.get('WERKZEUG_RUN_MAIN'):
-        webbrowser.open_new('http://127.0.0.1:5000')
-
-
+# Для Render — только запуск без открытия браузера
 if __name__ == '__main__':
-    # открываем браузер только если это основной процесс
-    if not os.environ.get('WERKZEUG_RUN_MAIN'):
-        threading.Timer(1, open_browser).start()
-    # запускаем Flask сервер
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    app.run(host='0.0.0.0', port=5000)
